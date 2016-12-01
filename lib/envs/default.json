@@ -1,0 +1,20 @@
+{
+    "global": {
+        "provider": "virtualbox",
+        "cpu": 2,
+        "memory": 1024 
+    },
+    "vms": {
+        "fedora": {
+            "autostart": true,
+            "box": "inclusivedesign/centos7",
+            "folders": {
+                "code": {
+                    "src": ".",
+                    "dest": "/home/vagrant/sync"
+                }
+            }
+        }
+    }
+}
+

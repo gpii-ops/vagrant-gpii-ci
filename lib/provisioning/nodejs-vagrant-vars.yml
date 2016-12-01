@@ -1,0 +1,11 @@
+---
+
+nodejs_app_name: "{{ app_name | default('application') }}"
+#nodejs_version: "{{ software_stack_version }}"
+nodejs_app_commands: "{{ setup | default([]) }}"
+#nodejs_app_start_script: "{{ app_start_script }}"
+#nodejs_app_tcp_port: "{{ app_tcp_port }}"
+#nodejs_app_git_clone: false
+nodejs_app_git_repo: "{{ git_repository | default(false) }}"
+nodejs_app_git_branch: "{{ git_branch | default('master') }}"
+nodejs_app_install_dir: "{{ folder['dest'] }}" 

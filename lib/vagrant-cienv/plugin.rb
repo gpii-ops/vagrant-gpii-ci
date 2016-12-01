@@ -19,10 +19,10 @@ module VagrantPlugins
       action_hook(:build_config, :environment_load) do |hook|
         hook.prepend(VagrantPlugins::Cienv::Action::BuildVagrantfile)
       end
-      # command("qi") do
-      #   require File.expand_path("../command/root", __FILE__)
-      #   Command::Root
-      # end
+      command("test") do
+         require File.expand_path("../command/test", __FILE__)
+         Command::Test
+      end
 
       # This sets up our log level to be whatever VAGRANT_LOG is.
       def self.setup_logging

@@ -1,0 +1,22 @@
+{
+    "global": {
+        "provider": "virtualbox",
+        "cpu": 2,
+        "memory": 1024 
+    },
+    "vms": {
+        "fedora": {
+            "autostart": true,
+            "box": "inclusivedesign/fedora24",
+            "gui": true,
+            "sound": true,
+            "folders": {
+                "code": {
+                    "src": ".",
+                    "dest": "/home/vagrant/sync"
+                }
+            }
+        }
+    }
+}
+

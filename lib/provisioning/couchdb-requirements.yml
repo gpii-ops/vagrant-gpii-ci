@@ -1,0 +1,5 @@
+- src: http://github.com/idi-ops/ansible-couchdb.git
+  name: couchdb
+
+- src: http://github.com/idi-ops/ansible-facts.git
+  name: facts

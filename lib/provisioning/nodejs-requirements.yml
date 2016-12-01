@@ -1,0 +1,7 @@
+- src: http://github.com/idi-ops/ansible-facts.git
+  name: facts
+
+- src: https://github.com/amatas/ansible-nodejs.git
+  version: test-vagrant-venv
+  name: nodejs
+

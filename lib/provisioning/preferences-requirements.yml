@@ -1,0 +1,9 @@
+- src: http://github.com/idi-ops/ansible-facts.git
+  name: facts
+
+- src: https://github.com/idi-ops/ansible-nodejs.git
+  name: nodejs
+
+- src: https://github.com/gpii-ops/ansible-preferences-server.git
+  name: preferences
+

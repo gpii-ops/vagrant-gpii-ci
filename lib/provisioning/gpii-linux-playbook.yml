@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  become: true
+
+  vars_files:
+    - "{{ lookup('env', 'VARS_FILE')  }}"
+
+  roles:
+    - facts
+    - nodejs

@@ -23,6 +23,7 @@ module VagrantPlugins
         def execute
           if @main_args.include?("-h") || @main_args.include?("--help")
             # Print the help for all the sub-commands.
+            puts "Help not completed yet"
             return help
           end
 
@@ -39,7 +40,7 @@ module VagrantPlugins
         # Prints the help out for this command
         def help
           opts = OptionParser.new do |o|
-            o.banner = "Usage: vagrant qi <command> [<args>]"
+            o.banner = "Usage: vagrant test [<args>]"
             o.separator ""
             o.separator "Available subcommands:"
 
@@ -53,7 +54,7 @@ module VagrantPlugins
             end
 
             o.separator ""
-            o.separator "For help on any individual command run `vagrant qi COMMAND -h`"
+            o.separator "For help on any individual command run `vagrant test -h`"
           end
 
           @env.ui.info(opts.help, prefix: false)

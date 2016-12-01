@@ -21,33 +21,51 @@ module VagrantPlugins
       autoload :InitEnvironment, action_root.join("init_environment")
 
       class BuildVagrantfile
+
+        def gem_path
+          Pathname.new(File.dirname __dir__)
+        end
+
+        def project_home
+          environment = @env[:env]
+          environment.instance_variable_get(:@cwd)  
+        end
+
+        def vagrant_home
+          project_home.join(Vagrant::Environment::DEFAULT_LOCAL_DATA)
+        end
+
         def initialize(app, env)
           @app = app
-          environment = env[:env]
-          root_path = environment.instance_variable_get(:@cwd)
-          local_data_path = root_path.join(Vagrant::Environment::DEFAULT_LOCAL_DATA)
+          @env = env
+          environment = @env[:env]
 
           # Only make all the magic if the .qi.yml definition file is found
-          return if !File.exist?(root_path.join(".qi.yml"))
+          return if !File.exist?(project_home.join(".qi.yml"))
 
-          require_relative local_data_path.to_s + "/provision-ci/lib/config_provider.rb"
-          require_relative local_data_path.to_s + "/provision-ci/lib/config_provision.rb"
-          require_relative local_data_path.to_s + "/provision-ci/lib/config_network.rb"
-          require_relative local_data_path.to_s + "/provision-ci/lib/config_folders.rb"
+          require_relative "config/config_provider.rb"
+          require_relative "config/config_provision.rb"
+          require_relative "config/config_network.rb"
+          require_relative "config/config_folders.rb"
 
-          $vagrant_vmenv_path = local_data_path.to_s + "/provision-ci/"
+          # $vagrant_vmenv_path = vagrant_home.to_s + "/provision-ci/"
 
           # load the .qi.yml file
-          qi_file = File.expand_path (root_path.join(".qi.yml"))
-          if File.exists?(qi_file)
-            qi_definition = YAML.load(File.read(qi_file))
-          else
-            raise ".qi.yml file not found in this repository"
-          end
+          qi_file = File.expand_path (project_home.join(".qi.yml"))
+          qi_definition = YAML.load(File.read(qi_file))
+
+          puts vagrant_home.join('provision-ci/envs').to_s
+          puts gem_path.join('envs').to_s
+          
+
+          # Copy enviroments and playbooks to home dir if needed
+          FileUtils.mkdir(vagrant_home.join('provision-ci')) if !File.exist?(vagrant_home.join('provision-ci'))
+          FileUtils.cp_r(gem_path.join('envs'), vagrant_home.join('provision-ci/envs')) if !File.exist?(vagrant_home.join('provision-ci/envs'))
+          FileUtils.cp_r(gem_path.join('provisioning'), vagrant_home.join('provision-ci/provisioning')) if !File.exist?(vagrant_home.join('provision-ci/provisioning'))
 
           # load the environment based on "env_runtime" variable of .qi.yml
           vagrant_env = qi_definition["env_runtime"] || "default"
-          environment_file = File.expand_path(local_data_path.to_s + "/provision-ci/envs", File.dirname(__FILE__)) +
+          environment_file = File.expand_path(vagrant_home.to_s + "/provision-ci/envs", File.dirname(__FILE__)) +
                              File::SEPARATOR + vagrant_env
           if File.exists?(environment_file + ".json")
             environment_ci = JSON.parse(File.read(environment_file + ".json"))
@@ -78,7 +96,7 @@ module VagrantPlugins
 
                   config_network(instance, vm_config)
 
-                  config_folders(instance, vm_id, qi_definition["apps"])
+                  config_folders(instance, vm_id, qi_definition["apps"], vagrant_home.join('provision-ci').to_s)
 
                 end
               end
@@ -89,8 +107,8 @@ module VagrantPlugins
           # that means that we need to store some internal variables and 
           # instantiate again the Vagrantfile instance with our previous code.
 
-          environment.instance_variable_set(:@root_path, root_path)
-          environment.instance_variable_set(:@local_data_path, local_data_path) 
+          environment.instance_variable_set(:@root_path, project_home)
+          environment.instance_variable_set(:@local_data_path, vagrant_home) 
 
           # the cienv code will be the first item to check in the list of
           # Vagrantfile sources
