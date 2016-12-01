@@ -1,0 +1,22 @@
+---
+
+email: anonymous@testdomain.org
+env_runtime: linux-desktop
+
+apps:
+  - app_name: gpii-linux
+    git_repository: https://github.com/GPII/linux.git
+    software_stack: gpii-linux
+    folder:
+      dest: /app/gpii-linux
+    run_in: fedora
+    deploy: false
+    setup:
+      - npm install
+      - sudo npm install -g grunt-cli node-gyp
+      - grunt --force build
+    test_cmds:
+      - "find -name \\*.sh -exec chmod +x '{}' \\;"
+      - node tests/AcceptanceTests.js
+      - cd tests && bash UnitTests.sh
+

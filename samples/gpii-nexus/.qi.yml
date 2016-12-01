@@ -1,0 +1,24 @@
+---
+
+# This sample fetchs the Pull Request #1 of the GPII/nexus repository, spin up a
+# fedora VM an run the tests when 'vagrant provision' command is run.
+
+email: anonymous@testdomain.org
+env_runtime: linux-desktop
+
+apps:
+  - app_name: gpii-nexus
+    git_repository: https://github.com/GPII/nexus.git
+    git_branch: pr/1
+    software_stack: nodejs
+    folder:
+      dest: /app/gpii-nexus
+    run_in: fedora
+    deploy: false
+    setup:
+      - npm install
+      - sudo npm install -g grunt-cli node-gyp
+      - grunt --force build
+    test_cmds:
+      - node tests/all-tests.js
+

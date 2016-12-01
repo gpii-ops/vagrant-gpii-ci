@@ -1,0 +1,27 @@
+---
+
+# This sample will spin up one VM with the desktop interface (linux-desktop
+# environment). Then will deploy an application named 'gpii-universal' which is
+# a clone of the repository https://github.com/GPII/universal.git. It will exec
+# the commands listed in the 'setup' variable at 'vagrant up' time, and the
+# 'test_cmds' commands will be executed with 'vagrant provision'.
+
+email: anonymous@testdomain.org
+env_runtime: linux-desktop
+
+apps:
+  - app_name: gpii-universal
+    git_repository: https://github.com/GPII/universal.git
+    software_stack: nodejs
+    folder:
+      dest: /app/gpii-universal
+    run_in: fedora
+    setup:
+      - npm install
+      - "sudo npm install -g testem"
+      - "git clone {{ git_repository }} /app/gpii-universal/node_modules/universal"
+    test_cmds:
+      - "npm test"
+      - "testem ci --file tests/web/testem_qi.json"
+      - "node tests/ProductionConfigTests.js"
+
