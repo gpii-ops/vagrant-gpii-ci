@@ -92,7 +92,7 @@ module VagrantPlugins
 
                   config_provider(instance, vm_config, environment_ci["global"])
 
-                  config_provision(instance, vm_config, vm_id, qi_definition["apps"])
+                  config_provision(instance, vm_config, vm_id, qi_definition["apps"], vagrant_home.join('provision-ci').to_s)
 
                   config_network(instance, vm_config)
 

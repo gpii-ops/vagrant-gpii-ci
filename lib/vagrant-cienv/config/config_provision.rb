@@ -3,7 +3,7 @@
 
 require 'yaml'
 
-def config_provision(instance, vm_config, vm_id, apps)
+def config_provision(instance, vm_config, vm_id, apps, vagrant_ci_path)
 
 
   apps.each do |config|
@@ -14,13 +14,13 @@ def config_provision(instance, vm_config, vm_id, apps)
 
         #check if every file is in place
         raise "File vagrant/provisioning/#{stack}-requirements.yml doesn't exist"\
-          unless File.file?($vagrant_vmenv_path + "/provisioning/#{stack}-requirements.yml")
+          unless File.file?(vagrant_ci_path + "/provisioning/#{stack}-requirements.yml")
         raise "File vagrant/provisioning/#{stack}-vars.yml doesn't exist"\
-          unless File.file?($vagrant_vmenv_path + "/provisioning/#{stack}-vagrant-vars.yml")
+          unless File.file?(vagrant_ci_path + "/provisioning/#{stack}-vagrant-vars.yml")
         raise "File vagrant/provisioning/#{stack}-playbook.yml doesn't exist"\
-          unless File.file?($vagrant_vmenv_path + "/provisioning/#{stack}-playbook.yml")
+          unless File.file?(vagrant_ci_path + "/provisioning/#{stack}-playbook.yml")
         raise "File vagrant/provisioning/base-playbook.yml doesn't exist"\
-          unless File.file?($vagrant_vmenv_path + "/provisioning/base-playbook.yml")
+          unless File.file?(vagrant_ci_path + "/provisioning/base-playbook.yml")
 
         qi_vars = JSON.dump(YAML::load(config.to_yaml))
 
