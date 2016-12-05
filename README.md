@@ -1,41 +1,94 @@
-# Vagrant::Cienv
+Vagrant-vmenv
+=============
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/vagrant/cienv`. To experiment with that code, run `bin/console` for an interactive prompt.
+Vagrant-vmenv is a npm module that is used to extend the behavior of a
+Vagrantfile. It uses virtual machine definitions to spin up complete
+enviroments where you can run tests or run your code.
 
-TODO: Delete this and the text above, and describe your gem
+Installation
+------------
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'vagrant-cienv'
+```
+npm install -g http://github.com/amatas/vagrant-vmenv
+cp node_modules/vagrant-vmenv/Vagrantfile.template Vagrantfile
+cp node_modules/vagrant-vmenv/qi.yml.template .qi.yml
 ```
 
-And then execute:
+The Vagrantfile acts as a pointer to the module, it shouldn't be modified. If
+you want to make a change at the environment level do so in the [environment
+configuration file](envs/), and if you want to configure how the applications
+are deployed and tested do so in the [.qi.yml](qi.yml.template) file of your
+repository.
 
-    $ bundle
+Working with vms
+----------------
 
-Or install it yourself as:
+Commands:
 
-    $ gem install vagrant-cienv
+ * `vagrant up` to spin up the [environment](envs/) defined in the .qi.yml file.
+ * `vagrant destroy` to stop and destroy the vm.
+ * `vagrant halt` to shutdown the vm without destroy it.
 
-## Usage
+Note:
 
-TODO: Write usage instructions here
+ * `vagrant up` will exec the commands listed in the *setup* variable of each
+application listed in the .qi.yml file.
+ * `vagrant provision` will exec the commands listed in the *test_cmds* variable
+of each application listed in the .qi.yml file.
 
-## Development
+Networking
+----------
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+A VM can have multiple virtual NICs. Two types are avilable for each NIC: public
+and private. The public NICs will be attached to the host's physical network,
+the private NICs will be attached to a private network only visible between the
+other VMs and the host. The IP address of a private network can be customized in
+the definition of the VM. An example of the network definition of a VM can be:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```
+networks:
+  privatenet:
+    type: private
+    ip: 192.168.45.22
+  publicnet:
+    type: public
+```
 
-## Contributing
+If an environment has multiple VMs definitions with several NICs the *hosts*
+file of each VM will list all the IP address of each VM plus the name of the VM,
+this is very useful to point services between the VMs.
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/vagrant-cienv. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Forwarded ports
+---------------
 
+The port forwarding is configured in the VMs definition. The `guest_port`
+variable is the source port to be mapped to the `host_port` variable. The
+`guest_port` must be set in each port forward block, `host_port` and protocol are
+optionals.
 
-## License
+```
+ports:
+  - guest_port: 8080
+    host_port: 8888
+    protocol: tcp
+  - guest_port: 8181
+    host_port: 9999
+  - guest_port:8081
+```
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+Shared folders
+--------------
+
+Each application can use a shared folder. If the *folder* variable of the
+application has a *src* key, Vagrant will map the path set in the src folder of
+the host to the path set in the *dest* variable in the VM.
+
+```
+folder:
+  src: "."
+  dest: "/app/universal"
+```
+
+More samples definitions can be found either in the [envs](envs) directory or in
+the [qi.yml.template](qi.yml.template).
 
