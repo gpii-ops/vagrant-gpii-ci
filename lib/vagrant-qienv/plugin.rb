@@ -56,4 +56,4 @@ module VagrantPlugins
   end
 end
 
-require 'vagrant-cienv/plugin'
+require 'vagrant-qienv/plugin'

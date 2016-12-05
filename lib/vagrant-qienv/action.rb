@@ -54,11 +54,8 @@ module VagrantPlugins
           qi_file = File.expand_path (project_home.join(".qi.yml"))
           qi_definition = YAML.load(File.read(qi_file))
 
-          puts vagrant_home.join('provision-ci/envs').to_s
-          puts gem_path.join('envs').to_s
-          
-
           # Copy enviroments and playbooks to home dir if needed
+          FileUtils.mkdir(vagrant_home) if !File.exist?(vagrant_home)
           FileUtils.mkdir(vagrant_home.join('provision-ci')) if !File.exist?(vagrant_home.join('provision-ci'))
           FileUtils.cp_r(gem_path.join('envs'), vagrant_home.join('provision-ci/envs')) if !File.exist?(vagrant_home.join('provision-ci/envs'))
           FileUtils.cp_r(gem_path.join('provisioning'), vagrant_home.join('provision-ci/provisioning')) if !File.exist?(vagrant_home.join('provision-ci/provisioning'))
@@ -78,7 +75,6 @@ module VagrantPlugins
           # build the host list of the VMs used, very useful to allow the communication
           # between them based on the hostname and IP stored in the hosts file
           build_hosts_list(environment_ci["vms"])
-
 
           vagrantfile_proc = Proc.new do
             Vagrant.configure(2) do |config|
