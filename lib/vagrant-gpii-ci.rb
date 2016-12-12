@@ -1,10 +1,10 @@
 require "pathname"
 
-require "vagrant-qienv/plugin"
+require "vagrant-gpii-ci/plugin"
 
 module VagrantPlugins
   module Cienv
-    lib_path = Pathname.new(File.expand_path("../vagrant-qienv", __FILE__))
+    lib_path = Pathname.new(File.expand_path("../vagrant-gpii-ci", __FILE__))
     autoload :Action, lib_path.join("action")
     autoload :Errors, lib_path.join("errors")
 

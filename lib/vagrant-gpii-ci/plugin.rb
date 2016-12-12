@@ -56,4 +56,4 @@ module VagrantPlugins
   end
 end
 
-require 'vagrant-qienv/plugin'
+require 'vagrant-gpii-ci/plugin'

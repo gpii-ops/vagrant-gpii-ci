@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'vagrant-qienv/version'
+require 'vagrant-gpii-ci/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "vagrant-qienv"
+  spec.name          = "vagrant-gpii-ci"
   spec.version       = VagrantPlugins::Cienv::VERSION
   spec.authors       = ["Alfredo Matas"]
   spec.email         = ["amatas@gmail.com"]
 
   spec.summary       = %q{Vagrant CI environment builder}
   spec.description   = %q{Vagrant CI environment builder}
-  spec.homepage      = "http://github.com/amatas/vagrant-qienv.git"
+  spec.homepage      = "http://github.com/amatas/vagrant-gpii-ci.git"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
