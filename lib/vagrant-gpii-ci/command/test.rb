@@ -1,7 +1,7 @@
 require 'optparse'
 
 module VagrantPlugins
-  module Cienv
+  module GPIICi
     module Command
       class Root < Vagrant.plugin("2", :command)
         def self.synopsis

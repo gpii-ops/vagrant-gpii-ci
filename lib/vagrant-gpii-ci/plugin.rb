@@ -1,24 +1,23 @@
 begin
   require "vagrant"
+  #require 'vagrant-gpii-ci/action'
 rescue LoadError
-  raise "The Vagrant QI plugin must be run within Vagrant."
-end
-
-# This is a sanity check to make sure no one is attempting to install
-# this into an early Vagrant version.
-if Vagrant::VERSION < "1.8.0"
-  raise "The Vagrant QI plugin is only compatible with Vagrant 1.8+"
+  raise "The Vagrant GPII CI plugin must be run within Vagrant."
 end
 
 module VagrantPlugins
-  module Cienv
+  module GPIICi
     class Plugin < Vagrant.plugin("2")
-      name "Cienv"
-      description "This plugin enabled Vagrant to work with QI QI environments"
+      name "GPIICi"
+      description <<-DESC
+      Vagrant plugin that parses a definition file in YAML to spin up
+      VMs to recreate an environment and run some tests.
+      DESC
 
       action_hook(:build_config, :environment_load) do |hook|
-        hook.prepend(VagrantPlugins::Cienv::Action::BuildVagrantfile)
+        hook.prepend(Action.build_vagrantfile)
       end
+
       command("test") do
          require File.expand_path("../command/test", __FILE__)
          Command::Test
@@ -56,4 +55,4 @@ module VagrantPlugins
   end
 end
 
-require 'vagrant-gpii-ci/plugin'
+

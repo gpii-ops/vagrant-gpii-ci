@@ -1,7 +1,7 @@
 require "vagrant/plugin/state_file"
 
 module VagrantPlugins
-  module Cienv
+  module GPIICi
     module Command
       class Base < Vagrant.plugin("2", :command)
         # This is a helper for executing an action sequence with the proper

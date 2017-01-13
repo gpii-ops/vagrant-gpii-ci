@@ -5,12 +5,12 @@ require 'vagrant-gpii-ci/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "vagrant-gpii-ci"
-  spec.version       = VagrantPlugins::Cienv::VERSION
+  spec.version       = VagrantPlugins::GPIICi::VERSION
   spec.authors       = ["Alfredo Matas"]
   spec.email         = ["amatas@gmail.com"]
 
-  spec.summary       = %q{Vagrant CI environment builder}
-  spec.description   = %q{Vagrant CI environment builder}
+  spec.summary       = %q{Vagrant GPII CI environment builder}
+  spec.description   = %q{Vagrant GPII CI environment builder}
   spec.homepage      = "http://github.com/amatas/vagrant-gpii-ci.git"
   spec.license       = "MIT"
 

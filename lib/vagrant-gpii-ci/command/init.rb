@@ -3,12 +3,12 @@ require 'optparse'
 require_relative "base"
 
 module VagrantPlugins
-  module Cienv
+  module GPIICi
     module Command
       class InitEnvironment < Base
         def execute
           opts = OptionParser.new do |o|
-            o.banner = "Usage: vagrant qi init [-h]"
+            o.banner = "Usage: vagrant gpii-ci init [-h]"
           end
 
           # Parse the options
