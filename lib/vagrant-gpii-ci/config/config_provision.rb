@@ -48,3 +48,4 @@ def config_provision(instance, vm_config, vm_id, apps, vagrant_ci_path)
     end
   end if apps
 end
+

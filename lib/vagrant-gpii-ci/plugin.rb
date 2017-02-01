@@ -1,6 +1,5 @@
 begin
   require "vagrant"
-  #require 'vagrant-gpii-ci/action'
 rescue LoadError
   raise "The Vagrant GPII CI plugin must be run within Vagrant."
 end
@@ -18,9 +17,14 @@ module VagrantPlugins
         hook.prepend(Action.build_vagrantfile)
       end
 
-      command("test") do
-         require File.expand_path("../command/test", __FILE__)
-         Command::Test
+      # Register capability to run commmands
+
+      # Create an action_hook to run the commands at the end of the provision
+
+      # run the test jobs when "test" command is invoked using the capability
+      command("ci") do
+         require File.expand_path("../command/ci", __FILE__)
+         Command::Ci
       end
 
       # This sets up our log level to be whatever VAGRANT_LOG is.
@@ -45,7 +49,7 @@ module VagrantPlugins
         # Set the logging level on all "vagrant" namespaced
         # logs as long as we have a valid level.
         if level
-          logger = Log4r::Logger.new("vagrant_cienv")
+          logger = Log4r::Logger.new("vagrant_gpii_ci")
           logger.outputters = Log4r::Outputter.stderr
           logger.level = level
           logger = nil

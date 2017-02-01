@@ -8,7 +8,7 @@ module VagrantPlugins
       class InitEnvironment < Base
         def execute
           opts = OptionParser.new do |o|
-            o.banner = "Usage: vagrant gpii-ci init [-h]"
+            o.banner = "Usage: vagrant gpii-ci test [-h]"
           end
 
           # Parse the options

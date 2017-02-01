@@ -1,0 +1,18 @@
+---
+
+email: anonymous@testdomain.org
+env_runtime: windows
+
+apps:
+  - app_name: gpii-windows
+    git_repository: https://github.com/GPII/windows.git
+    software_stack: gpii-windows
+    folder:
+      dest: "c:\gpii-windows"
+    run_in: windows
+    deploy: false
+    setup:
+      - npm install
+    test_cmds:
+      - node tests/AcceptanceTests.js
+

@@ -2,10 +2,9 @@ require "log4r"
 
 module VagrantPlugins
   module GPIICi
-    module Action
-
+    module Command
       # This action sets up the QI QI environment
-      class InitEnvironment
+      class InitEnvironment < Vagrant.plugin("2", :command)
 
         def initialize(app, env)
           @app = app

@@ -1,5 +1,0 @@
----
-
-nodejs_app_install_dir: "{{ folder['dest'] }}" 
-nodejs_app_git_repo: https://github.com/GPII/universal.git
-nodejs_app_git_branch: "{{ git_branch | default('master')  }}"
