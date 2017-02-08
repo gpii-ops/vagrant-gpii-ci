@@ -3,7 +3,7 @@ require "log4r"
 module VagrantPlugins
   module GPIICi
     module Command
-      # This action sets up the QI QI environment
+      # This action sets up the GPII CI environment
       class InitEnvironment < Vagrant.plugin("2", :command)
 
         def initialize(app, env)
@@ -12,7 +12,8 @@ module VagrantPlugins
         end
 
         def call(env)
-          @logger.info('i am inside class InitEnvironment - call()')
+          @logger.info('This call does nothing yet')
+          #TODO: Create a .qi.yml file based on a template
           @app.call(env)
         end
 

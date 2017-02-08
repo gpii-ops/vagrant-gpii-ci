@@ -10,10 +10,15 @@ module VagrantPlugins
         def call(env)
           @env = env
 
-          if File.exist?(project_home(@env).join(".qi.yml")) 
+          # The file .gpii-ci.yml can be override using this environment variable
+          ci_file ||= ENV["VAGRANT_CI_FILE"] if ENV.key?("VAGRANT_CI_FILE")
+          ci_file ||= ".gpii-ci.yml"
+
+          # Only if the ci_file is found the plugin will run
+          if File.exist?(project_home(@env).join(ci_file)) 
           
             environment = @env[:env]
-            ci_definition = get_ci_definition (".qi.yml")
+            ci_definition = get_ci_definition (ci_file)
             environment.instance_variable_set(:@ci_tests, get_ci_tests(ci_definition))
             vagrantfile_proc = Proc.new do
               Vagrant.configure(2) do |config|
@@ -54,7 +59,6 @@ module VagrantPlugins
               ci_tests["shell"][content["stage"]] = content["script"]
             end
           end
-
           ci_tests["stages"] = definition["stages"]
           ci_tests
         end
@@ -65,6 +69,8 @@ module VagrantPlugins
           @ci_definition = YAML.load(File.read(ci_file))
         end
 
+        # In the case of a multiVM environment, we need to connect the VMs using 
+        # a private network
         def inject_private_network_config(ci_environment_vms)
           return ci_environment_vms if ci_environment_vms.count() == 1
           int_id = 10
@@ -76,7 +82,7 @@ module VagrantPlugins
         end
         def get_ci_environment(definition)
           ci_environment_vms = inject_private_network_config(definition[".ci_env"]["vms"])
-          #TODO: load additional yaml files to extend the definition
+          #TODO: load additional yaml files to extend the definition of the vms
         end
 
         # Setup the provider using the definition of each VM.
@@ -119,17 +125,17 @@ module VagrantPlugins
           end if ci_vm_definition["mapped_ports"]
         end
 
-        def define_vm(vagrant_config, ci_vm_id, ci_vm_definition)
-          vagrant_config.vm.define ci_vm_id, autostart: ci_vm_definition["autostart"] || true do |vm_instance|
-                vm_instance.vm.hostname = ci_vm_id
-                set_provider_config(vm_instance, ci_vm_definition)
-                set_network_config(vm_instance, ci_vm_definition)
-          end
-        end
-
         def build_vms_config(vagrant_config, ci_environment_vms)
           ci_environment_vms.each do |ci_vm_id, ci_vm_definition|
-            define_vm(vagrant_config, ci_vm_id, ci_vm_definition)
+
+            ci_autostart = true
+            ci_autostart = ci_vm_definition["autostart"] if ci_vm_definition.key?("autostart")
+            
+            vagrant_config.vm.define ci_vm_id, autostart: ci_autostart do |vm_instance|
+                  vm_instance.vm.hostname = ci_vm_id
+                  set_provider_config(vm_instance, ci_vm_definition)
+                  set_network_config(vm_instance, ci_vm_definition)
+            end
           end
         end
       end

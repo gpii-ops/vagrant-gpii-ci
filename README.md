@@ -1,94 +1,76 @@
-Vagrant-vmenv
+Vagrant-GPII-CI
 =============
 
-Vagrant-vmenv is a npm module that is used to extend the behavior of a
-Vagrantfile. It uses virtual machine definitions to spin up complete
+Vagrant-GPII-CI is a vagrant plugin that is used to simplify the configuration stored in a Vagrantfile. It uses virtual machine definitions to spin up complete
 enviroments where you can run tests or run your code.
 
 Installation
 ------------
 
 ```
-npm install -g http://github.com/amatas/vagrant-vmenv
-cp node_modules/vagrant-vmenv/Vagrantfile.template Vagrantfile
-cp node_modules/vagrant-vmenv/qi.yml.template .qi.yml
+vagrant plugin install vagrant-gpii-ci
 ```
-
-The Vagrantfile acts as a pointer to the module, it shouldn't be modified. If
-you want to make a change at the environment level do so in the [environment
-configuration file](envs/), and if you want to configure how the applications
-are deployed and tested do so in the [.qi.yml](qi.yml.template) file of your
-repository.
 
 Working with vms
 ----------------
 
+No Vagrantfile is required if a file [.gpii-ci.yml](gpii-ci.yml.template) is found in the root of the repository.
+
+The name of the file can be override using the environment variable `VAGRANT_CI_FILE`.
+
 Commands:
 
- * `vagrant up` to spin up the [environment](envs/) defined in the .qi.yml file.
- * `vagrant destroy` to stop and destroy the vm.
- * `vagrant halt` to shutdown the vm without destroy it.
+ * `vagrant up [vm]` to spin up the defined in the .ci_env variable of the [.gpii-ci.yml](gpii-ci.yml.template) file. 
+ * `vagrant destroy [vm]` to stop and destroy the vm.
+ * `vagrant reload [vm]` to stop and destroy the vm.
+ * `vagrant halt [vm]` to shutdown the vm without destroy it.
+ * `vagrant ci test [vm]` to run all the stages defined in the selected vm
+
 
 Note:
 
- * `vagrant up` will exec the commands listed in the *setup* variable of each
-application listed in the .qi.yml file.
- * `vagrant provision` will exec the commands listed in the *test_cmds* variable
-of each application listed in the .qi.yml file.
+ * The `vm` parameter is not necessary in environments with only one VM defined.
+
+Sample:
+
+
+```
+.ci_env:
+  default: &default
+    cpu: 2                   # number of cpus
+    memory: 2048             # amount of RAM memory
+    clone: true              # use the linked_clone Vagrant feature
+    autostart: false         # only start a VM when it's specfied in the command line
+  vms:
+    windows10:               # name of the VM
+      <<: *default           # referece of the common part
+      3d: true               # enable 3D acceleration
+      sound: true            # add a sound card to the VM
+      box: inclusivedesign/windows10-eval
+    windows81:               # name of the VM
+      <<: *default           # referece of the common part
+      box: inclusivedesign/windows81-eval-x64
+    windows7:                # name of the VM
+      <<: *default           # referece of the common part
+      box: inclusivedesign/windows7-eval-x64
+```
 
 Networking
 ----------
 
-A VM can have multiple virtual NICs. Two types are avilable for each NIC: public
-and private. The public NICs will be attached to the host's physical network,
-the private NICs will be attached to a private network only visible between the
-other VMs and the host. The IP address of a private network can be customized in
-the definition of the VM. An example of the network definition of a VM can be:
+All the VMs have access to Internet using the gateway of the host through a NAT interface.
 
-```
-networks:
-  privatenet:
-    type: private
-    ip: 192.168.45.22
-  publicnet:
-    type: public
-```
+In the case of multi VM environments, a additional NIC card is create in each VM with a private IP of a private network that all the VMs share. The IP range of this network is 192.168.50.0/24. The IP address are assigned to each VM starting by 10.
 
-If an environment has multiple VMs definitions with several NICs the *hosts*
-file of each VM will list all the IP address of each VM plus the name of the VM,
-this is very useful to point services between the VMs.
-
-Forwarded ports
+Mapped ports
 ---------------
 
-The port forwarding is configured in the VMs definition. The `guest_port`
-variable is the source port to be mapped to the `host_port` variable. The
-`guest_port` must be set in each port forward block, `host_port` and protocol are
-optionals.
+The port mapping is configured in the VMs definition. The `mapped_ports`
+variable is a list of ports that will be mapped from the VM to the host.
 
 ```
-ports:
-  - guest_port: 8080
-    host_port: 8888
-    protocol: tcp
-  - guest_port: 8181
-    host_port: 9999
-  - guest_port:8081
+mapped_ports:
+  - 8080
+  - 8181
 ```
-
-Shared folders
---------------
-
-Each application can use a shared folder. If the *folder* variable of the
-application has a *src* key, Vagrant will map the path set in the src folder of
-the host to the path set in the *dest* variable in the VM.
-
-```
-folder:
-  src: "."
-  dest: "/app/universal"
-```
-
-More samples definitions can be found either in the [envs](envs) directory or in
-the [qi.yml.template](qi.yml.template).
 

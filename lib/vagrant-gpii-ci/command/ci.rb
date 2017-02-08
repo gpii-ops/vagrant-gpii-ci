@@ -26,7 +26,7 @@ module VagrantPlugins
         def execute
           if @main_args.include?("-h") || @main_args.include?("--help")
             # Print the help for all the sub-commands.
-            puts "Help not completed yet"
+            puts "GPIICi plugin provides some commands that help the launch of tests automatically"
             return help
           end
           # If we reached this far then we must have a subcommand. If not,
@@ -55,7 +55,7 @@ module VagrantPlugins
             end
 
             o.separator ""
-            o.separator "For help on any individual command run `vagrant test -h`"
+            o.separator "For help on any individual command run `vagrant ci <command> -h`"
           end
 
           @env.ui.info(opts.help, prefix: false)
