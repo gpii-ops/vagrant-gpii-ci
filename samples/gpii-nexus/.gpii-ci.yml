@@ -1,0 +1,26 @@
+---
+
+.ci_env:
+  vms:
+    fedora:
+      cpu: 2                   # number of cpus
+      memory: 2048             # amount of RAM memory
+      clone: true              # use the linked_clone Vagrant feature
+      autostart: true
+      box: inclusivedesign/fedora24
+
+stages:                # Stages to perform when 'ci test' command is invoked
+  - setup              # name of the first stage to execute
+  - test               # name of the second stage to execute
+
+setup_job:
+  stage: setup         # name of the stage
+  script:
+    - npm install
+    - sudo npm install -g grunt-cli node-gyp
+    - grunt --force build
+
+test_job:
+  stage: test          # name of the stage
+  script:              # One line per command to execute
+    - node tests/all-tests.js
