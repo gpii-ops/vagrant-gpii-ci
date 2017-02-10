@@ -52,14 +52,28 @@ module VagrantPlugins
 
         def get_ci_tests(definition)
           ci_tests = {}
-          ci_tests["shell"] = {}
-          definition.each do |name, content|
-            next if name.start_with?(".") or name.eql?("stages")
-            if content.include?("stage")
-              ci_tests["shell"][content["stage"]] = content["script"]
+          definition[".ci_env"]["vms"].each do | vmname, vmdetails |
+
+            ci_tests["#{vmname}"] = {}
+            ci_tests["#{vmname}"]["shell"] = {}
+            definition["stages"].each do |stage|
+              definition.each do |stagename, stagecontent|
+                # Ignore the statements that start with a dot
+                next if stagename.start_with?(".") or stagename.eql?("stages") or not stagecontent["stage"].eql?(stage)
+                # Build the hash of tests for each VM
+                if stagecontent.include?("stage")
+                  if vmdetails.include?("tags") and stagecontent.include?("tags")
+                    ci_tests["#{vmname}"]["shell"][stagecontent["stage"]] = stagecontent["script"] \
+                      if not (stagecontent["tags"] & vmdetails["tags"]).empty?
+                  elsif not stagecontent.include?("tags")
+                    ci_tests["#{vmname}"]["shell"][stagecontent["stage"]] = stagecontent["script"]
+                  else
+                    next
+                  end  
+                end
+              end
             end
           end
-          ci_tests["stages"] = definition["stages"]
           ci_tests
         end
 
@@ -130,7 +144,7 @@ module VagrantPlugins
 
             ci_autostart = true
             ci_autostart = ci_vm_definition["autostart"] if ci_vm_definition.key?("autostart")
-            
+
             vagrant_config.vm.define ci_vm_id, autostart: ci_autostart do |vm_instance|
                   vm_instance.vm.hostname = ci_vm_id
                   set_provider_config(vm_instance, ci_vm_definition)

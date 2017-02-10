@@ -1,5 +1,3 @@
-require 'optparse'
-
 module VagrantPlugins
   module GPIICi
   	module Command
@@ -10,11 +8,12 @@ module VagrantPlugins
         end
 
         def execute
-          options = {}
-          options[:auto] = false
-
+          param_options = {}
           opts = OptionParser.new do |o|
             o.banner = "Usage: vagrant ci test [options] [name|id]"
+            o.on("--stage STAGE", String, "Execute specific stage") do |s|
+              param_options[:stage] = s
+            end
           end
           argv = parse_options(opts)
           return if !argv
@@ -29,15 +28,22 @@ module VagrantPlugins
             else
               cwd = "cd /vagrant"
             end
-            
-            ci_tests.each do | provisioner, stages |
+            ci_tests["#{machine.config.vm.hostname}"].each do | provisioner, stages |
+
               if provisioner.eql?("shell")
-                ci_tests["stages"].each do |stage|
-                  stages[stage].each do | script |
-                    @env.ui.info("Running #{script}")
+                stages.each do |stagename, stagescripts|
+                  next if (param_options.include?(:stage) and not stagename.eql?(param_options[:stage]))
+                  stagescripts.each do | script |
+
+                    options = {}
+                    options[:color] = :blue
+                    @env.ui.info("Running shell script:")
+                    @env.ui.info("#{script}",options)
+
                     machine.communicate.execute("#{cwd}; #{script}") do |type, data|
                       handle_comm(type, data, machine)
                     end
+
                   end
                 end
               end
@@ -46,7 +52,7 @@ module VagrantPlugins
         end
 
         def handle_comm(type, data, machine)
-          if [:stdout].include?(type)
+          if [:stdout,:stderr].include?(type)
             # Output the data with the proper color based on the stream.
             color = type == :stdout ? :green : :red
   
