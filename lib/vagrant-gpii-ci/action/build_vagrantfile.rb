@@ -1,3 +1,5 @@
+require 'yaml'
+
 module VagrantPlugins
   module GPIICi
     module Action
