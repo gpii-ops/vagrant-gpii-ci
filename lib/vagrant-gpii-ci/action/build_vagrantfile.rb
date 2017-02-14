@@ -115,7 +115,7 @@ module VagrantPlugins
             end
             
             if ci_vm_definition["sound"] == true then
-              vm.customize ["modifyvm", :id, "--audio", "null", "--audiocontroller", "ac97"]
+              vm.customize ["modifyvm", :id, "--audio", "null", "--audiocontroller", "hda"]
             end
       
             vm.customize ["modifyvm", :id, "--ioapic", "on"]
