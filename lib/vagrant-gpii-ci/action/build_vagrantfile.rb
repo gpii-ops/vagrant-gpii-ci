@@ -110,10 +110,12 @@ module VagrantPlugins
             
             vm.customize ["modifyvm", :id, "--memory", ci_vm_definition["memory"] ]
             vm.customize ["modifyvm", :id, "--cpus", ci_vm_definition["cpu"] ]
-      
+
+            vm.customize ["modifyvm", :id, "--vram", "256"]
             if ci_vm_definition["3d"] == true then
-              vm.customize ["modifyvm", :id, "--vram", "128"]
               vm.customize ["modifyvm", :id, "--accelerate3d", "on"]
+            else
+              vm.customize ["modifyvm", :id, "--accelerate3d", "off"]
             end
             
             if ci_vm_definition["sound"] == true then
