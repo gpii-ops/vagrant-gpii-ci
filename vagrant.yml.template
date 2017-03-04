@@ -23,7 +23,7 @@
       <<: *default           # referece of the common part
       box: inclusivedesign/windows7-eval-x64
 
-stages:                # Stages to perform when 'ci test' command is invoked
+.ci_stages:                # Stages to perform when 'ci test' command is invoked
   - setup              # name of the first stage to execute
   - test               # name of the second stage to execute
 
