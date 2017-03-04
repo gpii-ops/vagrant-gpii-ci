@@ -18,7 +18,7 @@ vagrant plugin install vagrant-gpii-ci
 Working with vms
 ----------------
 
-No Vagrantfile is required if a file [.gpii-ci.yml](gpii-ci.yml.template) is found in the root of the repository.
+No Vagrantfile is required if a file [.vagrant.yml](vagrant.yml.template) is found in the root of the repository.
 
 The name of the file can be override using the environment variable `VAGRANT_CI_FILE`.
 

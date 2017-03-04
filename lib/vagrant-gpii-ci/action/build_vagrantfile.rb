@@ -14,7 +14,7 @@ module VagrantPlugins
 
           # The file .gpii-ci.yml can be override using this environment variable
           ci_file ||= ENV["VAGRANT_CI_FILE"] if ENV.key?("VAGRANT_CI_FILE")
-          ci_file ||= ".gpii-ci.yml"
+          ci_file ||= ".vagrant.yml"
 
           # Only if the ci_file is found the plugin will run
           if File.exist?(project_home(@env).join(ci_file)) 
