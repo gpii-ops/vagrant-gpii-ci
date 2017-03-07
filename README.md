@@ -15,6 +15,11 @@ The installation is as simple as run this command in your user's shell:
 vagrant plugin install vagrant-gpii-ci
 ```
 
+The recommended dependencies are:
+
+ * Virtualbox 5.1.14 or 5.0.32
+ * Vagrant 1.9.2
+
 Working with vms
 ----------------
 
