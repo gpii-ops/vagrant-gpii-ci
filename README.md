@@ -1,5 +1,5 @@
 Vagrant-GPII-CI
-=============
+===============
 
 Scope
 -----
@@ -28,7 +28,7 @@ Commands:
  * `vagrant destroy [vm]` to stop and destroy the vm.
  * `vagrant reload [vm]` to stop and destroy the vm.
  * `vagrant halt [vm]` to shutdown the vm without destroy it.
- * `vagrant ci test [vm]` to run all the stages defined in the .ci_stages variable, at the selected vm.
+ * `vagrant ci test [--stage STAGE] [vm]` to run all the stages defined in the .ci_stages variable, at the selected vm. If the *--stage* option is used, Vagrant will only run the stage spcified.
 
 Note:
 
@@ -51,8 +51,8 @@ The options available for a vm definition are:
  * `sound` - Enables a dummy sound card in the VM. Disabled by default
  * `gui` - Enable the GUI of the VM. _True_ by default.
 
-Samples
-=======
+### Samples
+
 
 ```
 .ci_env:
@@ -111,8 +111,8 @@ Tags
 
 The tags can be used to run specific stages in some VMs. A stage with a set of tags will be only executed in the VMs that have those tags listed. If a stage doesn't have tags defined it will be executed in all VMs.
 
-Sample
-=======
+### Sample
+
 
 ```
 .ci_env:
