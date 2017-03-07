@@ -9,24 +9,18 @@
       autostart: true
       box: inclusivedesign/fedora24
 
-stages:                # Stages to perform when 'ci test' command is invoked
+.ci_stages:                # Stages to perform when 'ci test' command is invoked
   - setup              # name of the first stage to execute
   - test               # name of the second stage to execute
 
 setup_job:
   stage: setup         # name of the stage
   script:
-    - sudo ansible-galaxy install -fr provisioning/requirements.yml
-    - >
-      sudo UNIVERSAL_VARS_FILE=vagrant-vars.yml ansible-playbook provisioning/playbook.yml 
-      --extra-vars "@provisioning/vars.yml" 
-      --extra-vars "nodejs_app_install_dir=/vagrant" 
-      --tags="install,configure"
-    - sudo npm install -g testem
+    - npm install
+    - sudo npm install -g grunt-cli node-gyp
+    - grunt --force build
 
 test_job:
   stage: test          # name of the stage
   script:              # One line per command to execute
-    - "npm test"
-    - "testem ci --file tests/web/testem_qi.json"
-    - "node tests/ProductionConfigTests.js"
+    - node tests/all-tests.js
