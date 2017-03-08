@@ -1,6 +1,6 @@
 ---
 
-.ci_env:
+env:
   vms:
     fedora:
       cpu: 2                   # number of cpus
@@ -9,7 +9,7 @@
       autostart: true
       box: inclusivedesign/fedora24
 
-.ci_stages:                # Stages to perform when 'ci test' command is invoked
+stages:                # Stages to perform when 'ci test' command is invoked
   - setup              # name of the first stage to execute
   - test               # name of the second stage to execute
 

@@ -10,3 +10,4 @@
 .vagrant
 .gitlab-ci.yml
 .vagrant.yml
+Vagrantfile

@@ -29,11 +29,11 @@ The name of the file can be override using the environment variable `VAGRANT_CI_
 
 Commands:
 
- * `vagrant up [vm]` to spin up the vms defined in the .ci_env variable. 
+ * `vagrant up [vm]` to spin up the vms defined in the `env` variable.
  * `vagrant destroy [vm]` to stop and destroy the vm.
  * `vagrant reload [vm]` to stop and destroy the vm.
  * `vagrant halt [vm]` to shutdown the vm without destroy it.
- * `vagrant ci test [--stage STAGE] [vm]` to run all the stages defined in the .ci_stages variable, at the selected vm. If the *--stage* option is used, Vagrant will only run the stage spcified.
+ * `vagrant ci test [--stage STAGE] [vm]` to run all the stages defined in the `stages` variable, at the selected vm. If the `--stage` option is used, Vagrant will only run the stage spcified.
 
 Note:
 
@@ -43,7 +43,7 @@ Note:
 Virtual Machines definition
 ---------------------------
 
-The `.ci_env` variable must have a child variable called `vms` that lists the names of the virtual machines defined. Each name of a VM must have some additional options.
+The `env` variable must have a child variable called `vms` that lists the names of the virtual machines defined. Each name of a VM must have some additional options.
 
 The options available for a vm definition are:
 
@@ -60,7 +60,7 @@ The options available for a vm definition are:
 
 
 ```
-.ci_env:
+env:
   vms:
     windows10:
       cpu: 2
@@ -73,7 +73,7 @@ The options available for a vm definition are:
 In the following example we use the [merge](http://yaml.org/type/merge.html) feature of YAML to simplify the virtual machines definitions.
 
 ```
-.ci_env:
+env:
   default: &default
     cpu: 2                   # number of cpus
     memory: 2048             # amount of RAM memory
@@ -120,7 +120,7 @@ The tags can be used to run specific stages in some VMs. A stage with a set of t
 
 
 ```
-.ci_env:
+env:
   default: &default
     cpu: 2                 # number of cpus
     memory: 2048           # amount of RAM memory
@@ -138,7 +138,7 @@ The tags can be used to run specific stages in some VMs. A stage with a set of t
         - linux
       box: inclusivedesign/fedora
 
-.ci_stages:                # Stages to perform when 'ci test' command is invoked
+stages:                # Stages to perform when 'ci test' command is invoked
   - setup_win
   - setup_linux
   - test

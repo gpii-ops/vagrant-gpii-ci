@@ -9,4 +9,4 @@ run any of these examples:
  2. Install the plugin
     `vagrant plugin install vagrant-gpii-ci`
  3. Run vagrant:
-    `vagrant up && vagrant test`
+    `vagrant up && vagrant ci test`

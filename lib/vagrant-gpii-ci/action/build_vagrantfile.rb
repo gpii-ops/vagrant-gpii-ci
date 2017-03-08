@@ -54,18 +54,18 @@ module VagrantPlugins
 
         def get_ci_tests(definition)
           ci_tests = {}
-          if not definition.include?(".ci_env")
-            puts "WARNING: .ci_env not declared in the definition file"
+          if not definition.include?("env")
+            puts "WARNING: env not declared in the definition file"
             return ci_tests
-          elsif not definition.include?(".ci_stages")
-            puts "WARNING: .ci_stages not declared in the definition file"
+          elsif not definition.include?("stages")
+            puts "WARNING: stages not declared in the definition file"
             return ci_tests
           end
-          definition[".ci_env"]["vms"].each do | vmname, vmdetails |
+          definition["env"]["vms"].each do | vmname, vmdetails |
 
             ci_tests["#{vmname}"] = {}
             ci_tests["#{vmname}"]["shell"] = {}
-            definition[".ci_stages"].each do |stage|
+            definition["stages"].each do |stage|
               definition.each do |stagename, stagecontent|
                 # Ignore the statements that start with a dot
                 next if stagename.start_with?(".") or stagename.eql?("stages") or not stagecontent["stage"].eql?(stage)
@@ -104,10 +104,10 @@ module VagrantPlugins
           ci_environment_vms
         end
         def get_ci_environment(definition)
-          if not definition.include?(".ci_env")
+          if not definition.include?("env")
             return {}
           end
-          ci_environment_vms = inject_private_network_config(definition[".ci_env"]["vms"])
+          ci_environment_vms = inject_private_network_config(definition["env"]["vms"])
           #TODO: load additional yaml files to extend the definition of the vms
         end
 

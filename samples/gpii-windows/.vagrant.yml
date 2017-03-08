@@ -1,6 +1,6 @@
 ---
 
-.ci_env:
+env:
   vms:
     windows10:
       cpu: 2                   # number of cpus
@@ -9,7 +9,7 @@
       autostart: true
       box: inclusivedesign/windows10-eval
 
-.ci_stages:                # Stages to perform when 'ci test' command is invoked
+stages:                # Stages to perform when 'ci test' command is invoked
   - setup              # name of the first stage to execute
   - test               # name of the second stage to execute
 
