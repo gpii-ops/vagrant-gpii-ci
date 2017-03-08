@@ -1,13 +1,14 @@
 ---
 
-# The variables that start with a dot "." are ignored by gitlab-ci, 
-# but they are used by the vagrant-gpii-ci plugin
+# The variables that start with a dot "." are ignored by gitlab-ci in the
+# case we need to integrate with that system, but they are used by the 
+# vagrant-gpii-ci plugin
 #
 # .ci_env variable defines the settings of each VM. The common variables are in 
 # the section 'default' which will be reference later in each VM definition.
 
 .ci_env:
-  default: &default
+  default: &default          # 'default' will be merged below
     cpu: 2                   # number of cpus
     memory: 2048             # amount of RAM memory
     clone: true              # use the linked_clone Vagrant feature
@@ -23,7 +24,14 @@
       <<: *default           # referece of the common part
       box: inclusivedesign/windows7-eval-x64
 
-.ci_stages:                # Stages to perform when 'ci test' command is invoked
+# The following part defines the commands that will be executed in the VM
+# all the commands are executed by default in the /vagrant or c:\vagrant
+# directory.
+#
+# In this case we use two stages called "setup" and "test" to define the 
+# provision scripts and the testing scripts
+
+.ci_stages:            # Ordered stages to execute when 'ci test' command is invoked
   - setup              # name of the first stage to execute
   - test               # name of the second stage to execute
 
