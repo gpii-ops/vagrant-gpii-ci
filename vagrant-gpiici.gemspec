@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "vagrant-gpii-ci"
   spec.version       = VagrantPlugins::GPIICi::VERSION
   spec.authors       = ["Alfredo Matas"]
-  spec.email         = ["amatas@gmail.com"]
+  spec.email         = ["alfredo@raisinghthefloor.org"]
 
   spec.summary       = %q{Vagrant GPII CI environment builder}
   spec.description   = %q{Vagrant GPII CI environment builder}
