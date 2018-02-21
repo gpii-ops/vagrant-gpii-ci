@@ -12,7 +12,7 @@ module VagrantPlugins
         def call(env)
           @env = env
 
-          # The file .gpii-ci.yml can be override using this environment variable
+          # The file .vagrant.yml can be override using this environment variable
           ci_file ||= ENV["VAGRANT_CI_FILE"] if ENV.key?("VAGRANT_CI_FILE")
           ci_file ||= ".vagrant.yml"
 

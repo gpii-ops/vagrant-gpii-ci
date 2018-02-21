@@ -1,24 +1,24 @@
 module VagrantPlugins
   module GPIICi
   	module Command
-      class CITest < Vagrant.plugin("2", :command)
+      class CIRun < Vagrant.plugin("2", :command)
 
         def self.synopsis
-          "Run tests on a machine"
+          "Run stages on a machine"
         end
 
         def execute
           param_options = {}
           opts = OptionParser.new do |o|
-            o.banner = "Usage: vagrant ci test [options] [name|id]"
-            o.on("--stage STAGE", String, "Execute specific stage") do |s|
-              param_options[:stage] = s
+            o.banner = "Usage: vagrant ci run [options] [name|id]"
+            o.on("--stage STAGE", String, "Execute specific stage") do |stage|
+              param_options[:stage] = stage
             end
           end
           argv = parse_options(opts)
           return if !argv
 
-          @env.ui.info("Launching tests...")
+          @env.ui.info("Launching stages...")
 
           ci_tests = @env.instance_variable_get(:@ci_tests)
 

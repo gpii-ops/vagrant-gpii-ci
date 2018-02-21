@@ -13,7 +13,7 @@ module VagrantPlugins
 
         def call(env)
           @logger.info('This call does nothing yet')
-          #TODO: Create a .qi.yml file based on a template
+          #TODO: Create a .vagrant.yml file based on a template
           @app.call(env)
         end
 

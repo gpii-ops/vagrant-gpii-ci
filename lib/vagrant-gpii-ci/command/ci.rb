@@ -17,13 +17,19 @@ module VagrantPlugins
             require File.expand_path("../init", __FILE__)
             InitEnvironment
           end
-          @subcommands.register(:test) do
-            require File.expand_path("../test", __FILE__)
-            CITest
+          @subcommands.register(:run) do
+            require File.expand_path("../run", __FILE__)
+            CIRun
           end
         end
 
         def execute
+
+          # Deprecated test message
+          if @sub_command == 'test'
+            @env.ui.info("The 'test' subcommand is deprecated, use 'run' instead\n", prefix: false)
+          end
+
           if @main_args.include?("-h") || @main_args.include?("--help")
             # Print the help for all the sub-commands.
             puts "GPIICi plugin provides some commands that help the launch of tests automatically"
