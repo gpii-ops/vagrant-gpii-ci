@@ -17,19 +17,19 @@ module VagrantPlugins
           ci_file ||= ".vagrant.yml"
 
           # Only if the ci_file is found the plugin will run
-          if File.exist?(project_home(@env).join(ci_file)) 
-          
+          if File.exist?(project_home(@env).join(ci_file))
+
             environment = @env[:env]
             ci_definition = get_ci_definition (ci_file)
             environment.instance_variable_set(:@ci_tests, get_ci_tests(ci_definition))
             vagrantfile_proc = Proc.new do
               Vagrant.configure(2) do |config|
                 build_vms_config(config, get_ci_environment(ci_definition))
-              end 
+              end
             end
 
             # The Environment instance has been instantiated without a Vagrantfile
-            # that means that we need to store some internal variables and 
+            # that means that we need to store some internal variables and
             # instantiate again the Vagrantfile instance with our previous code.
             environment.instance_variable_set(:@root_path, project_home(@env))
             environment.instance_variable_set(:@local_data_path, vagrant_home(@env))
@@ -49,7 +49,7 @@ module VagrantPlugins
 
         def project_home(env)
           environment = env[:env]
-          environment.instance_variable_get(:@cwd)  
+          environment.instance_variable_get(:@cwd)
         end
 
         def get_ci_tests(definition)
@@ -78,7 +78,7 @@ module VagrantPlugins
                     ci_tests["#{vmname}"]["shell"][stagecontent["stage"]] = stagecontent["script"]
                   else
                     next
-                  end  
+                  end
                 end
               end
             end
@@ -92,7 +92,7 @@ module VagrantPlugins
           @ci_definition = YAML.load(File.read(ci_file))
         end
 
-        # In the case of a multiVM environment, we need to connect the VMs using 
+        # In the case of a multiVM environment, we need to connect the VMs using
         # a private network
         def inject_private_network_config(ci_environment_vms)
           return ci_environment_vms if ci_environment_vms.count() == 1
@@ -113,11 +113,11 @@ module VagrantPlugins
 
         # Setup the provider using the definition of each VM.
         def set_provider_config(vm_instance, ci_vm_definition)
-      
+
           vm_instance.vm.provider :virtualbox do |vm|
-      
+
             vm.linked_clone = ci_vm_definition["clone"] || false
-            
+
             vm.customize ["modifyvm", :id, "--memory", ci_vm_definition["memory"] ]
             vm.customize ["modifyvm", :id, "--cpus", ci_vm_definition["cpu"] ]
 
@@ -127,19 +127,23 @@ module VagrantPlugins
             else
               vm.customize ["modifyvm", :id, "--accelerate3d", "off"]
             end
-            
+
             if ci_vm_definition["sound"] == true then
               vm.customize ["modifyvm", :id, "--audio", "null", "--audiocontroller", "hda"]
             end
-      
+
             vm.customize ["modifyvm", :id, "--ioapic", "on"]
             vm.customize ["setextradata", "global", "GUI/SuppressMessages", "all"]
-      
-            vm.gui = ci_vm_definition["gui"] || true
+
+            if ci_vm_definition.include?("gui") and ci_vm_definition["gui"] == false
+              vm.gui = false
+            else
+              vm.gui = true
+            end
           end
-      
+
           vm_instance.vm.box = ci_vm_definition["box"]
-        
+
         end
 
         def set_network_config(vm_instance, ci_vm_definition)
@@ -169,4 +173,4 @@ module VagrantPlugins
       end
     end
   end
-end     
+end
