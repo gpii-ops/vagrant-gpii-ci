@@ -9,7 +9,7 @@ Vagrant-GPII-CI is a vagrant plugin that is used to simplify the definition of a
 Installation
 ------------
 
-The installation is as simple as run this command in your user's shell:
+The installation is as simple as running this command in your shell:
 
 ```
 vagrant plugin install vagrant-gpii-ci
@@ -17,13 +17,13 @@ vagrant plugin install vagrant-gpii-ci
 
 The recommended dependencies are:
 
- * Virtualbox 5.1.14 or 5.0.32
- * Vagrant 1.9.2
+ * Virtualbox 5.2 or higher
+ * Vagrant 2.0.0 or higher
 
-Working with vms
+Working with VMs
 ----------------
 
-No Vagrantfile is required if a file [.vagrant.yml](vagrant.yml.template) is found in the root of the repository.
+No Vagrantfile is required if a [.vagrant.yml](vagrant.yml.template) file is found in the root of the repository.
 
 The name of the file can be override using the environment variable `VAGRANT_CI_FILE`.
 
