@@ -1,0 +1,33 @@
+---
+
+env:
+  vms:
+    windows10:
+      cpu: 2                   # number of cpus
+      memory: 2048             # amount of RAM memory
+      clone: true              # use the linked_clone Vagrant feature
+      autostart: true
+      box: inclusivedesign/windows10-eval
+
+stages:                # Stages to perform when 'ci test' command is invoked
+  - setup              # name of the first stage to execute
+  - test               # name of the second stage to execute
+
+setup_job:
+  stage: setup         # name of the stage
+  script:
+    - |
+      choco upgrade firefox googlechrome -y
+      $moduleLocation = Join-Path $env:SystemDrive "vagrant/provisioning/Provisioning.psm1"
+      $destinationDir = Join-Path $env:SystemDrive "tmp"
+      cp $moduleLocation $destinationDir
+    - provisioning/Chocolatey.ps1
+    - provisioning/Npm.ps1
+    - provisioning/Build.ps1
+    - provisioning/Installer.ps1
+
+test_job:
+  stage: test          # name of the stage
+  script:              # One line per command to execute
+    - do.ps1 -c 'node tests/AcceptanceTests.js builtIn'
+    - do.ps1 -c 'node tests/UnitTests.js'
